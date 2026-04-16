@@ -1,0 +1,8 @@
+type Resource {
+    id: ID
+    title: String
+    description: String
+    pricePerDay: Float
+    ownerId: ID
+    createdAt: String
+}

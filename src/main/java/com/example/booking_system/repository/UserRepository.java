@@ -5,7 +5,7 @@ import com.example.booking_system.model.User;
 import java.util.List;
 import java.util.UUID;
 
-public class UserRepository {
+public interface UserRepository {
     User save(User user);
     User findById(UUID id);
     List<User> findAll();

@@ -1,0 +1,9 @@
+type Booking {
+    id: ID
+    userId: ID
+    resourceId: ID
+    startDate: String
+    endDate: String
+    totalPrice: Float
+    status: String
+}

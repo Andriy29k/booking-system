@@ -11,21 +11,22 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+
 @Service
 public class BookingService {
+
     private final BookingRepository bookingRepository;
 
     public BookingService(BookingRepository bookingRepository) {
         this.bookingRepository = bookingRepository;
     }
 
-    private final Map<UUID, Booking> storage = new HashMap<>();
-
     public Booking createBooking(UUID userId,
                                  UUID resourceId,
                                  LocalDate start,
                                  LocalDate end,
                                  BigDecimal pricePerDay) {
+
         validateDates(start, end);
         checkAvailability(resourceId, start, end);
 
@@ -39,29 +40,40 @@ public class BookingService {
         booking.setCreatedAt(LocalDateTime.now());
 
         long days = ChronoUnit.DAYS.between(start, end);
+        if (days <= 0) {
+            throw new IllegalArgumentException("Invalid booking period");
+        }
+
         booking.setTotalPrice(pricePerDay.multiply(BigDecimal.valueOf(days)));
 
         return bookingRepository.save(booking);
-    }
-
-    private void validateDates(LocalDate start, LocalDate end) {
-        if(start.isAfter(end) || start.equals(end)) {
-            throw new IllegalArgumentException("Start date must be after end date");
-        }
-    }
-
-    private void checkAvailability(UUID resourceId, LocalDate start, LocalDate end) {
-        List<Booking> existing = bookingRepository.findByResourceId(resourceId);
-
-        boolean conflict = existing.stream().anyMatch(b -> start.isBefore(b.getEndDate()) && end.isAfter(b.getStartDate()));
-
-        if(conflict) {
-            throw new RuntimeException("Resource not available");
-        }
     }
 
     public List<Booking> getAll() {
         return bookingRepository.findAll();
     }
 
+    private void validateDates(LocalDate start, LocalDate end) {
+        if (start.isAfter(end) || start.equals(end)) {
+            throw new IllegalArgumentException("Start date must be before end date");
+        }
+    }
+
+    private void checkAvailability(UUID resourceId, LocalDate start, LocalDate end) {
+
+        List<Booking> existing = bookingRepository.findByResourceId(resourceId);
+
+        if (existing == null) {
+            existing = Collections.emptyList();
+        }
+
+        boolean conflict = existing.stream().anyMatch(b ->
+                start.isBefore(b.getEndDate()) &&
+                        end.isAfter(b.getStartDate())
+        );
+
+        if (conflict) {
+            throw new RuntimeException("Resource not available for selected dates");
+        }
+    }
 }

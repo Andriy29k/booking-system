@@ -1,0 +1,26 @@
+type Booking {
+    id: ID
+    userId: ID
+    resourceId: ID
+    startDate: String
+    endDate: String
+    totalPrice: Float
+    status: String
+}
+
+input CreateBookingRequest {
+    userId: ID!
+    resourceId: ID!
+    startDate: String!
+    endDate: String!
+    pricePerDay: Float!
+}
+
+
+type Query {
+    bookings: [Booking]
+}
+
+type Mutation {
+    createBooking(input: CreateBookingRequest!): Booking
+}

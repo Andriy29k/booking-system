@@ -1,7 +1,10 @@
 package com.example.booking_system.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 import java.util.UUID;
 import com.example.booking_system.model.enums.Role;
 import java.time.LocalDateTime;
@@ -30,6 +33,7 @@ public class User {
 
     private LocalDateTime createdAt;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
-    private java.util.List<Booking> bookings;
+    private List<Booking> bookings;
 }

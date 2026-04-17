@@ -3,6 +3,7 @@ package com.example.booking_system.controller;
 
 import com.example.booking_system.dto.CreateUserRequest;
 import com.example.booking_system.model.User;
+import com.example.booking_system.model.enums.Role;
 import com.example.booking_system.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +37,17 @@ public class UserController {
 
     @GetMapping("/{id}")
     public User getById(@PathVariable UUID id) {
-        return userService.getById(id);
+        return userService.getByIdOrThrow(id);
+    }
+
+    @PutMapping("/{id}")
+    public User update(@PathVariable UUID id,
+                       @RequestParam String email,
+                       @RequestParam String firstName,
+                       @RequestParam String lastName,
+                       @RequestParam Role role) {
+
+        return userService.update(id, email, firstName, lastName, role);
     }
 
     @DeleteMapping("/{id}")

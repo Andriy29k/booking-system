@@ -5,6 +5,7 @@ import com.example.booking_system.model.Resource;
 import com.example.booking_system.service.ResourceService;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,7 +36,16 @@ public class ResourceController {
 
     @GetMapping("/{id}")
     public Resource getById(@PathVariable UUID id) {
-        return resourceService.getById(id);
+        return resourceService.getByIdOrThrow(id);
+    }
+
+    @PutMapping("/{id}")
+    public Resource update(@PathVariable UUID id,
+                           @RequestParam String title,
+                           @RequestParam String description,
+                           @RequestParam BigDecimal pricePerDay) {
+
+        return resourceService.update(id, title, description, pricePerDay);
     }
 
     @DeleteMapping("/{id}")

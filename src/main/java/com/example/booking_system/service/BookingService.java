@@ -31,8 +31,8 @@ public class BookingService {
         this.resourceService = resourceService;
     }
 
-    public Booking create(UUID userId,
-                          UUID resourceId,
+    public Booking create(Long userId,
+                          Long resourceId,
                           LocalDate start,
                           LocalDate end,
                           BigDecimal pricePerDay) {
@@ -49,28 +49,24 @@ public class BookingService {
         return bookingRepository.save(booking);
     }
 
-    @Transactional
-    public Booking getByIdOrThrow(UUID id) {
+    public Booking getByIdOrThrow(Long id) {
         return bookingRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
     }
 
-    @Transactional
     public List<Booking> getAll() {
         return bookingRepository.findAll();
     }
 
-    @Transactional
-    public List<Booking> getByUser(UUID userId) {
+    public List<Booking> getByUser(Long userId) {
         return bookingRepository.findByUser_Id(userId);
     }
 
-    @Transactional
-    public List<Booking> getByResource(UUID resourceId) {
+    public List<Booking> getByResource(Long resourceId) {
         return bookingRepository.findByResource_Id(resourceId);
     }
 
-    public Booking updateDates(UUID bookingId,
+    public Booking updateDates(Long bookingId,
                                LocalDate newStart,
                                LocalDate newEnd,
                                BigDecimal pricePerDay) {
@@ -89,12 +85,16 @@ public class BookingService {
         booking.setEndDate(newEnd);
 
         long days = ChronoUnit.DAYS.between(newStart, newEnd);
+        if (days <= 0) {
+            throw new IllegalArgumentException("Invalid booking period");
+        }
+
         booking.setTotalPrice(pricePerDay.multiply(BigDecimal.valueOf(days)));
 
         return bookingRepository.save(booking);
     }
 
-    public void delete(UUID bookingId) {
+    public void delete(Long bookingId) {
         Booking booking = getByIdOrThrow(bookingId);
         bookingRepository.delete(booking);
     }
@@ -106,6 +106,7 @@ public class BookingService {
                                  BigDecimal pricePerDay) {
 
         long days = ChronoUnit.DAYS.between(start, end);
+
         if (days <= 0) {
             throw new IllegalArgumentException("Invalid booking period");
         }
@@ -128,7 +129,9 @@ public class BookingService {
         }
     }
 
-    private void ensureAvailability(UUID resourceId, LocalDate start, LocalDate end) {
+    private void ensureAvailability(Long resourceId,
+                                    LocalDate start,
+                                    LocalDate end) {
 
         List<Booking> existing = bookingRepository.findByResource_Id(resourceId);
 

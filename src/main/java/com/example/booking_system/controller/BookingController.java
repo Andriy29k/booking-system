@@ -5,6 +5,7 @@ import com.example.booking_system.model.Booking;
 import com.example.booking_system.service.BookingService;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -32,7 +33,7 @@ public class BookingController {
     }
 
     @GetMapping("/{id}")
-    public Booking getById(@PathVariable UUID id) {
+    public Booking getById(@PathVariable Long id) {
         return bookingService.getByIdOrThrow(id);
     }
 
@@ -42,26 +43,26 @@ public class BookingController {
     }
 
     @GetMapping("/user/{userId}")
-    public List<Booking> getByUser(@PathVariable UUID userId) {
+    public List<Booking> getByUser(@PathVariable Long userId) {
         return bookingService.getByUser(userId);
     }
 
     @GetMapping("/resource/{resourceId}")
-    public List<Booking> getByResource(@PathVariable UUID resourceId) {
+    public List<Booking> getByResource(@PathVariable Long resourceId) {
         return bookingService.getByResource(resourceId);
     }
 
     @PutMapping("/{id}")
-    public Booking update(@PathVariable UUID id,
+    public Booking update(@PathVariable Long id,
                           @RequestParam LocalDate startDate,
                           @RequestParam LocalDate endDate,
-                          @RequestParam java.math.BigDecimal pricePerDay) {
+                          @RequestParam BigDecimal pricePerDay) {
 
         return bookingService.updateDates(id, startDate, endDate, pricePerDay);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable UUID id) {
+    public void delete(@PathVariable Long id) {
         bookingService.delete(id);
     }
 }

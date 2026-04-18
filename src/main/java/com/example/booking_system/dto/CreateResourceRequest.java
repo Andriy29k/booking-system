@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -14,5 +13,5 @@ public class CreateResourceRequest {
     private String title;
     private String description;
     private BigDecimal pricePerDay;
-    private UUID ownerId;
+    private Long ownerId;
 }

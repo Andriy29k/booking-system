@@ -26,32 +26,31 @@ public class UserService {
                        Role role) {
 
         validate(email, firstName, lastName);
-
         ensureEmailUnique(email);
 
         User user = buildUser(email, firstName, lastName, role);
 
+        user.setAvatar(null);
+        user.setAvatarContentType(null);
+
         return userRepository.save(user);
     }
 
-    @Transactional
-    public User getByIdOrThrow(UUID id) {
+    public User getByIdOrThrow(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    @Transactional
     public List<User> getAll() {
         return userRepository.findAll();
     }
 
-    @Transactional
     public User getByEmailOrThrow(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public User update(UUID id,
+    public User update(Long id,
                        String email,
                        String firstName,
                        String lastName,
@@ -73,7 +72,31 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void delete(UUID id) {
+    public User updateAvatar(Long userId, byte[] avatar, String contentType) {
+
+        User user = getByIdOrThrow(userId);
+
+        user.setAvatar(avatar);
+        user.setAvatarContentType(contentType);
+
+        return userRepository.save(user);
+    }
+
+    public User removeAvatar(Long userId) {
+
+        User user = getByIdOrThrow(userId);
+
+        user.setAvatar(null);
+        user.setAvatarContentType(null);
+
+        return userRepository.save(user);
+    }
+
+    public byte[] getAvatar(Long userId) {
+        return getByIdOrThrow(userId).getAvatar();
+    }
+
+    public void delete(Long id) {
         User user = getByIdOrThrow(id);
         userRepository.delete(user);
     }

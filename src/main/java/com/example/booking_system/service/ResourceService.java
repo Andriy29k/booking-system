@@ -1,7 +1,9 @@
 package com.example.booking_system.service;
 
 import com.example.booking_system.model.Resource;
+import com.example.booking_system.model.User;
 import com.example.booking_system.repository.ResourceRepository;
+import com.example.booking_system.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -15,42 +17,46 @@ import java.util.UUID;
 public class ResourceService {
 
     private final ResourceRepository resourceRepository;
+    private final UserRepository userRepository;
 
-    public ResourceService(ResourceRepository resourceRepository) {
+    public ResourceService(ResourceRepository resourceRepository,
+                           UserRepository userRepository) {
         this.resourceRepository = resourceRepository;
+        this.userRepository = userRepository;
     }
 
     public Resource create(String title,
                            String description,
                            BigDecimal pricePerDay,
-                           UUID ownerId) {
+                           Long ownerId) {
 
         validate(title, pricePerDay, ownerId);
 
-        Resource resource = buildResource(title, description, pricePerDay, ownerId);
+        User owner = userRepository.findById(ownerId)
+                .orElseThrow(() -> new RuntimeException("Owner not found"));
+
+        Resource resource = buildResource(title, description, pricePerDay, owner);
 
         return resourceRepository.save(resource);
     }
 
-    @Transactional
-    public Resource getByIdOrThrow(UUID id) {
+    public Resource getByIdOrThrow(Long id) {
         return resourceRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Resource not found"));
     }
 
-    @Transactional
     public List<Resource> getAll() {
         return resourceRepository.findAll();
     }
 
-    public Resource update(UUID id,
+    public Resource update(Long id,
                            String title,
                            String description,
                            BigDecimal pricePerDay) {
 
         Resource resource = getByIdOrThrow(id);
 
-        validate(title, pricePerDay, resource.getOwnerId());
+        validate(title, pricePerDay, resource.getOwner().getId());
 
         resource.setTitle(title);
         resource.setDescription(description);
@@ -59,7 +65,7 @@ public class ResourceService {
         return resourceRepository.save(resource);
     }
 
-    public void delete(UUID id) {
+    public void delete(Long id) {
         Resource resource = getByIdOrThrow(id);
         resourceRepository.delete(resource);
     }
@@ -67,13 +73,13 @@ public class ResourceService {
     private Resource buildResource(String title,
                                    String description,
                                    BigDecimal pricePerDay,
-                                   UUID ownerId) {
+                                   User owner) {
 
         Resource resource = new Resource();
         resource.setTitle(title);
         resource.setDescription(description);
         resource.setPricePerDay(pricePerDay);
-        resource.setOwnerId(ownerId);
+        resource.setOwner(owner);
         resource.setCreatedAt(LocalDateTime.now());
 
         return resource;
@@ -81,7 +87,7 @@ public class ResourceService {
 
     private void validate(String title,
                           BigDecimal pricePerDay,
-                          UUID ownerId) {
+                          Long ownerId) {
 
         if (title == null || title.isBlank()) {
             throw new IllegalArgumentException("Title cannot be empty");

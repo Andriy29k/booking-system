@@ -1,10 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Booking System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background: #f4f4f4;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        button {
+            padding: 8px 12px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        pre {
+            background: #111;
+            color: #0f0;
+            padding: 10px;
+            overflow: auto;
+            max-height: 300px;
+        }
+    </style>
 </head>
 <body>
-$END$
+
+<h1>Booking System Dashboard</h1>
+
+<div class="container">
+
+    <div class="card">
+        <h2>Users</h2>
+        <button onclick="loadUsers()">Load Users</button>
+        <pre id="users"></pre>
+    </div>
+
+    <div class="card">
+        <h2>Resources</h2>
+        <button onclick="loadResources()">Load Resources</button>
+        <pre id="resources"></pre>
+    </div>
+
+    <div class="card">
+        <h2>Bookings</h2>
+        <button onclick="loadBookings()">Load Bookings</button>
+        <pre id="bookings"></pre>
+    </div>
+
+</div>
+
+<script>
+    const API = "http://localhost:8080/api";
+
+    async function loadUsers() {
+        const res = await fetch(`${API}/users`);
+        const data = await res.json();
+        document.getElementById("users").textContent =
+            JSON.stringify(data, null, 2);
+    }
+
+    async function loadResources() {
+        const res = await fetch(`${API}/resources`);
+        const data = await res.json();
+        document.getElementById("resources").textContent =
+            JSON.stringify(data, null, 2);
+    }
+
+    async function loadBookings() {
+        const res = await fetch(`${API}/bookings`);
+        const data = await res.json();
+        document.getElementById("bookings").textContent =
+            JSON.stringify(data, null, 2);
+    }
+</script>
+
 </body>
 </html>

@@ -6,14 +6,13 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateBookingRequest {
-    private UUID userId;
-    private UUID resourceId;
+    private Long userId;
+    private Long resourceId;
     private LocalDate startDate;
     private LocalDate endDate;
     private BigDecimal pricePerDay;

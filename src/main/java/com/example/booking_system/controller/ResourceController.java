@@ -35,12 +35,12 @@ public class ResourceController {
     }
 
     @GetMapping("/{id}")
-    public Resource getById(@PathVariable UUID id) {
+    public Resource getById(@PathVariable Long id) {
         return resourceService.getByIdOrThrow(id);
     }
 
     @PutMapping("/{id}")
-    public Resource update(@PathVariable UUID id,
+    public Resource update(@PathVariable Long id,
                            @RequestParam String title,
                            @RequestParam String description,
                            @RequestParam BigDecimal pricePerDay) {
@@ -49,7 +49,7 @@ public class ResourceController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable UUID id) {
+    public void delete(@PathVariable Long id) {
         resourceService.delete(id);
     }
 }

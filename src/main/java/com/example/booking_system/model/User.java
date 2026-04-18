@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-import java.util.UUID;
 import com.example.booking_system.model.enums.Role;
 import java.time.LocalDateTime;
 
@@ -16,8 +15,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class User {
     @Id
-    @GeneratedValue
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -28,12 +27,26 @@ public class User {
     @Column(nullable = false)
     private String lastName;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Booking> bookings;
+
+    @Lob
+    @Column(name = "avatar")
+    private byte[] avatar;
+
+    @Column(name = "avatar_content_type")
+    private String avatarContentType;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

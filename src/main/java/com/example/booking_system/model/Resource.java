@@ -1,10 +1,11 @@
 package com.example.booking_system.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.List;
 
 @Entity
 @Table(name = "resources")
@@ -12,9 +13,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Resource {
+
     @Id
-    @GeneratedValue
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String title;
     private String description;
@@ -22,10 +24,27 @@ public class Resource {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal pricePerDay;
 
-    private UUID ownerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner;
 
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "resource")
-    private java.util.List<Booking> bookings;
+    @JsonIgnore
+    private List<Booking> bookings;
+
+    @ElementCollection
+    @CollectionTable(
+            name = "resource_images",
+            joinColumns = @JoinColumn(name = "resource_id")
+    )
+    @Column(name = "image_url")
+    private List<String> images;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

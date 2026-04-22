@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="header">
+  <h1>🧾 Register</h1>
+</header>
+
+<main class="container">
+
+  <div class="card">
+    <h2>Create account</h2>
+
+    <label>First name</label><br>
+    <input type="text" id="firstName" placeholder="John"><br><br>
+
+    <label>Last name</label><br>
+    <input type="text" id="lastName" placeholder="Doe"><br><br>
+
+    <label>Email</label><br>
+    <input type="email" id="email" placeholder="john@mail.com"><br><br>
+
+    <label>Password</label><br>
+    <input type="password" id="password" placeholder="••••••••"><br><br>
+
+    <button class="button" onclick="registerUser()">
+      Register
+    </button>
+
+    <p id="result"></p>
+  </div>
+
+</main>
+
+<script src="js/register.js"></script>
+</body>
+</html>

@@ -18,6 +18,10 @@ async function loadResources() {
             <button class="button">Book</button>
         `;
 
+        card.onclick = () => {
+            window.location.href = `resource-details.html?id=${resource.id}`;
+        };
+
         container.appendChild(card);
     });
 }

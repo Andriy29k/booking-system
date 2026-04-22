@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resource Details</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="header">
+    <h1>📦 Resource Details</h1>
+</header>
+
+<main class="container">
+
+    <div class="card" id="resource-card">
+        <h2 id="title">Loading...</h2>
+        <p id="description"></p>
+        <h3 id="price"></h3>
+
+        <div id="images"></div>
+    </div>
+
+    <div class="card">
+        <h2>📅 Book this resource</h2>
+
+        <label>Start date</label><br>
+        <input type="date" id="startDate"><br><br>
+
+        <label>End date</label><br>
+        <input type="date" id="endDate"><br><br>
+
+        <button class="button" onclick="createBooking()">
+            Create Booking
+        </button>
+
+        <pre id="result"></pre>
+    </div>
+
+</main>
+
+<script src="js/resource-details.js"></script>
+</body>
+</html>

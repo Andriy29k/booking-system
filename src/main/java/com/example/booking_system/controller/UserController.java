@@ -23,16 +23,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public User create(@RequestBody CreateUserRequest request) {
-        return userService.create(
-                request.getEmail(),
-                request.getFirstName(),
-                request.getLastName(),
-                request.getRole()
-        );
-    }
-
     @GetMapping
     public List<User> getAll() {
         return userService.getAll();

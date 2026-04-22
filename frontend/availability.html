@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Availability Check</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="header">
+  <h1>🔎 Availability Checker</h1>
+</header>
+
+<main class="container">
+
+  <div class="card">
+    <h2>Select Resource</h2>
+    <select id="resourceSelect"></select>
+  </div>
+
+  <div class="card">
+    <h2>Select Date Range</h2>
+
+    <label>Start date</label><br>
+    <input type="date" id="startDate"><br><br>
+
+    <label>End date</label><br>
+    <input type="date" id="endDate"><br><br>
+
+    <button class="button" onclick="checkAvailability()">
+      Check Availability
+    </button>
+
+    <h3 id="result"></h3>
+  </div>
+
+</main>
+
+<script src="js/availability.js"></script>
+</body>
+</html>

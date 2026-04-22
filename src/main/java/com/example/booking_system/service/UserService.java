@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -28,7 +27,12 @@ public class UserService {
         validate(email, firstName, lastName);
         ensureEmailUnique(email);
 
-        User user = buildUser(email, firstName, lastName, role);
+        User user = new User();
+        user.setEmail(email);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setRole(role != null ? role : Role.USER);
+        user.setCreatedAt(LocalDateTime.now());
 
         user.setAvatar(null);
         user.setAvatarContentType(null);
@@ -99,21 +103,6 @@ public class UserService {
     public void delete(Long id) {
         User user = getByIdOrThrow(id);
         userRepository.delete(user);
-    }
-
-    private User buildUser(String email,
-                           String firstName,
-                           String lastName,
-                           Role role) {
-
-        User user = new User();
-        user.setEmail(email);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setRole(role != null ? role : Role.USER);
-        user.setCreatedAt(LocalDateTime.now());
-
-        return user;
     }
 
     private void validate(String email,
